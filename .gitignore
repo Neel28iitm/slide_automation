@@ -1,0 +1,49 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.env
+venv/
+.venv
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.next/
+out/
+build/
+
+# Project specific
+backend/chroma_db/
+backend/cloned_voices/
+backend/test_output.wav
+backend/debug_ingest.py
+backend/test_voice_synthesis.py
+backend/test_model_load.py
+.gemini/
+.antigravity/
+
+# OS
+.DS_Store
+Thumbs.db
