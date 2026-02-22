@@ -1,179 +1,180 @@
-# 🎤 ConsultDeck Studio
-### GitHub → RAG → Voice Q&A Presentation System
+<div align="center">
+  <img src="https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/NextJS-Dark.svg" width="60" alt="NextJS"/>
+  <img src="https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/TailwindCSS-Dark.svg" width="60" alt="Tailwind"/>
+  <img src="https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/Python-Dark.svg" width="60" alt="Python"/>
+  <img src="https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/FastAPI-Dark.svg" width="60" alt="FastAPI"/>
+  <img src="https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/Docker.svg" width="60" alt="Docker"/>
 
-> Paste your GitHub repo URL, upload your slides, and your presentation becomes a **live AI expert** that answers client questions — by voice, in English or Hindi.
+  <br />
+  <br />
 
----
+  <h1>🎤 ConsultDeck Studio</h1>
+  <strong>Open-Source RAG + Voice Q&A Presentation System</strong>
+  <br />
+  <br />
+  
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
+  [![NextJS](https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js&logoColor=white)](https://nextjs.org/)
+  
+  <p>
+    Turn your dull slides into a <b>live AI expert</b>. Upload your project documentation (PDF) and your presentation slides, clone your voice, and let the system answer client questions via real-time Voice Q&A—fully context-aware!
+  </p>
+</div>
 
-## 🧠 How It Works
+<hr />
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    ConsultDeck Studio                        │
-│                                                             │
-│  Step 1: You paste your GitHub repo URL                     │
-│          ↓                                                  │
-│  Step 2: System auto-fetches ALL files (code, docs, README) │
-│          ↓                                                  │
-│  Step 3: Files are chunked → embedded → stored in ChromaDB  │
-│          ↓                                                  │
-│  Step 4: You present your slides to client                  │
-│          ↓                                                  │
-│  Step 5: Client asks a question (voice or text)             │
-│     → Whisper transcribes speech                           │
-│     → RAG retrieves relevant code/docs                     │
-│     → LLM generates slide-aware answer                     │
-│     → TTS speaks the answer aloud                          │
-└─────────────────────────────────────────────────────────────┘
-```
+## 🌟 Overview
 
----
+**ConsultDeck Studio** bridges the gap between static presentations and dynamic, intelligent interactions. By combining Retrieval-Augmented Generation (RAG) with State-of-the-Art Speech-to-Text (Whisper/Gemini) and Text-to-Speech engines, your slides literally **talk back** to your audience.
 
-## ✨ Features
+Ideal for **Consultants, Developer Advocates, and Technical Sales Engineers** who want their system architecture and codebases instantly searchable and explainable during live client meetings.
 
-| Feature | Detail |
+### ✨ Key Features
+
+| Feature | Description |
 |---|---|
-| 🔗 **GitHub Ingestion** | Paste any public/private repo URL → all files auto-indexed |
-| 🧠 **Slide-Scoped RAG** | Each slide activates relevant context from your codebase |
-| 🎤 **Voice Input** | Client asks questions verbally — Whisper understands both EN + HI |
-| 🔊 **Voice Output** | AI answers spoken aloud via OpenAI TTS |
-| 🇮🇳 **Hindi Support** | Full Hinglish/Hindi Q&A supported |
-| 🔒 **Self-Hosted** | Your repo data never leaves your infrastructure |
-| 🤖 **Multi-Provider** | OpenAI / Claude / Ollama (local) |
+| 📄 **Document Indexing** | Upload your project documentation (PDF) → context is instantly vectorized and indexed to build your AI's knowledge base. |
+| 🧠 **Slide-Scoped RAG** | Each slide acts as a localized context trigger, fetching highly relevant constraints from your codebase. |
+| 🎤 **Bilingual Voice Input** | Talk to your presentation naturally! Powered by Whisper, it seamlessly understands both **English** and **Hindi/Hinglish**. |
+| 🗣️ **Instant Voice Cloning** | Clone your own voice locally using **Pocket TTS**. Your AI avatar speaks directly to clients in your exact vocal tone! |
+| 🔒 **Self-Hosted Privacy** | Operate locally with **Ollama** or deploy privately. Your proprietary documentation stays firmly within your infrastructure. |
+| 🤖 **Model Agnostic** | Seamless integrations with OpenAI (GPT-4o), Anthropic (Claude 3.5), Google (Gemini), and local LLMs (Llama 3). |
 
 ---
 
-## 🚀 Quick Start
+## 🏗️ System Architecture
 
-### 1. Clone & Configure
+```mermaid
+graph LR
+    subgraph Frontend [Next.js Client]
+        UI[Presentation UI]
+        VP[Voice Panel]
+        VP <--> |Mic Audio / Play Audio| UI
+    end
+
+    subgraph Backend [FastAPI Server]
+        API[API Routers]
+        STT[Whisper/Gemini STT]
+        RAG[LangChain RAG Node]
+        TTS[Voice Synthesis]
+        CLONE[Pocket TTS Cloing]
+    end
+
+    subgraph Data [Storage Layer]
+        DOCS[Project Documentation]
+        CD[ChromaDB Vector Store]
+    end
+
+    UI --> |Upload PDF Docs| API
+    API --> |Process & Chunk| DOCS
+    DOCS --> |Embeddings| CD
+    VP --> |Voice Question| STT
+    STT --> |Text Query| RAG
+    RAG <--> |Retrieve Context| CD
+    RAG --> |LLM Answer| TTS
+    TTS <--> |Local Voice Clone| CLONE
+    TTS --> |Audio Stream| VP
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Ensure you have the following installed on your machine:
+- **Node.js** (v18+)
+- **Python** (3.10+)
+- **Docker** & **Docker Compose** (Highly Recommended)
+- Optional: HuggingFace Account (for Pocket-TTS voice cloning authorization)
+
+### 1️⃣ Clone & Configure
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/consultdeck-studio.git
-cd consultdeck-studio
+git clone https://github.com/YOUR_USERNAME/slide_automation.git
+cd slide_automation
 
-# Configure environment
+# Setup environment variables
 cp backend/.env.example backend/.env
-# Edit backend/.env — add your OPENAI_API_KEY at minimum
 ```
+👉 *Open `backend/.env` and configure your API keys (e.g., `OPENAI_API_KEY`, `GEMINI_API_KEY`).*
 
-### 2. Start with Docker (Recommended)
+### 2️⃣ Fast Deployment (Docker)
+
+The fastest and most reliable way to spin up both the frontend and backend.
 
 ```bash
-docker compose up -d
-
-# Open browser
-open http://localhost:3000
+docker compose up --build -d
 ```
+Open your browser and navigate to `http://localhost:3000`.
 
-### 3. Or Run Locally
+### 3️⃣ Manual Installation (Local Dev)
 
+If you prefer to run the services independently for development:
+
+**Backend (Terminal 1):**
 ```bash
-# Terminal 1 — Backend
 cd backend
-python -m venv venv && source venv/bin/activate
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env    # fill in your keys
 uvicorn main:app --reload --port 8000
+```
 
-# Terminal 2 — Frontend
+**Frontend (Terminal 2):**
+```bash
 cd frontend
 npm install
-BACKEND_URL=http://localhost:8000 npm run dev
+npm run dev
 ```
+Navigate to `http://localhost:3000`.
 
 ---
 
 ## 🎯 Usage Flow
 
-### As a Consultant (Setup)
-
-1. Open `http://localhost:3000`
-2. Paste your GitHub repo URL (e.g. your RAG system repo)
-3. Click **"Fetch & Index Repo"** — wait for green ✅
-4. Choose AI provider
-5. Click **"Launch Presentation →"**
-
-### During Client Presentation
-
-- Slides show on the main screen
-- **Voice Q&A panel** is always visible (bottom-right)
-- Client (or you) clicks mic → asks question
-- AI answers in real-time with voice
-- Language toggle: **EN / हि** (switch anytime)
-- Press **V** to toggle voice panel visibility
+1. **Setup Session**: Open the Studio (`localhost:3000`), upload your project documentation (PDFs) and Presentation Slides (PPTX/PDF).
+2. **Clone Voice (Optional)**: Click on the Voice Identity step, record a 10-second prompt, and the system matches your voice signature locally.
+3. **Choose Theme & Provider**: Select your visual theme and preferred LLM Provider (Gemini / OpenAI / Anthropic / Ollama).
+4. **Launch Presentation**: Hit launch! While presenting, you or the client can click the Mic button on the floating Voice Panel to ask questions contextually based on the active slide.
 
 ---
 
-## 🏗️ Architecture
+## 🔧 Configure AI Providers
 
-```
-consultdeck-studio/
-├── backend/                    # Python FastAPI
-│   ├── main.py                 # Entry point
-│   ├── config.py               # Settings (reads .env)
-│   ├── routers/
-│   │   ├── ingest.py           # /api/ingest/github, /api/ingest/slide
-│   │   ├── rag.py              # /api/rag/query
-│   │   └── voice.py            # /api/voice/transcribe, /api/voice/speak
-│   ├── services/
-│   │   ├── github_fetcher.py   # GitHub API → fetch all files
-│   │   ├── vector_store.py     # ChromaDB operations
-│   │   ├── rag_service.py      # Query + LLM answer generation
-│   │   └── voice_service.py    # Whisper STT + OpenAI TTS
-│   └── models/
-│       └── schemas.py          # Pydantic request/response models
-│
-├── frontend/                   # Next.js 14
-│   └── src/app/
-│       ├── page.tsx            # Studio setup page
-│       ├── present/page.tsx    # Presentation + Voice overlay
-│       ├── hooks/
-│       │   └── useVoiceRAG.ts  # Core voice pipeline hook
-│       ├── components/voice/
-│       │   └── VoicePanel.tsx  # Voice Q&A UI widget
-│       └── api/[...path]/      # Proxy to Python backend
-│
-└── docker-compose.yml
-```
+Modify the `backend/.env` to switch between supported engines:
+
+| Provider | STT Engine | TTS Engine | Best Used For |
+|---|---|---|---|
+| **OpenAI** | Whisper | OpenAI TTS-1 | Best out-of-the-box quality & speed |
+| **Gemini** | Multimodal STT | Edge TTS (Fallback) | Extremely fast reasoning & free tier |
+| **Anthropic**| Whisper | Edge TTS (Fallback) | Complex coding architecture queries |
+| **Ollama** | Browser API | Browser API | Fully private, offline networking |
+
+*(Note: Voice cloning overrides the TTS engine utilizing Local Pocket-TTS).*
 
 ---
 
-## 🔧 Configuration
+## 🤝 Contributing
 
-### AI Providers
+We welcome contributions! If you're looking to help out, here are a few areas we are actively working on:
+- ElevenLabs direct integration
+- Interactive real-time waveform visualizers for the Voice panel
+- Full export of automated Q&A transcripts as PDF minutes
 
-| Provider | STT | TTS | RAG | Best For |
-|---|---|---|---|---|
-| **OpenAI** | Whisper ✅ | TTS-1 ✅ | GPT-4o ✅ | Best quality |
-| **Anthropic** | Whisper ✅ | TTS-1 ✅ | Claude ✅ | Best reasoning |
-| **Ollama** | Browser API | Browser API | Llama 3.1 | Offline / private |
-
-### For Private GitHub Repos
-
-```env
-GITHUB_TOKEN=ghp_your_token_here
-```
-
-### Supported File Types (auto-indexed)
-
-`.py` `.ts` `.js` `.tsx` `.md` `.yaml` `.json` `.sql` `.ipynb` `.tf` `.sh` `.dockerfile` `.java` `.go` `.rs` + more
-
----
-
-## 🗺️ Roadmap
-
-- [ ] Slide upload via PPTX/PDF parsing
-- [ ] Multi-session dashboard
-- [ ] ElevenLabs voice integration
-- [ ] Real-time waveform visualization
-- [ ] Export Q&A transcript as PDF
-
----
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## 📄 License
 
-MIT
+Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
-<p align="center">Built for consultants who want their slides to talk back.</p>
+<p align="center">
+  <b>Built for consultants who want their slides to talk back.</b>
+</p>

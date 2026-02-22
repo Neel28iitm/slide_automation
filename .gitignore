@@ -37,7 +37,8 @@ build/
 # Project specific
 backend/chroma_db/
 backend/cloned_voices/
-backend/test_output.wav
+backend/*.mp3
+backend/*.wav
 backend/debug_ingest.py
 backend/test_voice_synthesis.py
 backend/test_model_load.py

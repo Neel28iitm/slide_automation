@@ -14,15 +14,15 @@ interface UseVoiceRAGOptions {
 }
 
 export function useVoiceRAG(opts: UseVoiceRAGOptions) {
-  const [state,      setState]      = useState<VoiceState>("idle");
+  const [state, setState] = useState<VoiceState>("idle");
   const [transcript, setTranscript] = useState("");
-  const [answer,     setAnswer]     = useState("");
-  const [sources,    setSources]    = useState<any[]>([]);
-  const [error,      setError]      = useState("");
+  const [answer, setAnswer] = useState("");
+  const [sources, setSources] = useState<any[]>([]);
+  const [error, setError] = useState("");
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef   = useRef<Blob[]>([]);
-  const audioRef         = useRef<HTMLAudioElement | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // ── Start recording ──────────────────────────────────────────────────────
   const startListening = useCallback(async () => {
@@ -34,7 +34,7 @@ export function useVoiceRAG(opts: UseVoiceRAGOptions) {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
       mediaRecorderRef.current = recorder;
-      audioChunksRef.current   = [];
+      audioChunksRef.current = [];
 
       recorder.ondataavailable = e => {
         if (e.data.size > 0) audioChunksRef.current.push(e.data);
@@ -91,12 +91,12 @@ export function useVoiceRAG(opts: UseVoiceRAGOptions) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          session_id:    opts.sessionId,
-          slide_id:      opts.slideId,
-          slide_title:   opts.slideTitle,
+          session_id: opts.sessionId,
+          slide_id: opts.slideId,
+          slide_title: opts.slideTitle,
           slide_context: opts.slideContext,
-          question:      text,
-          language:      opts.language,
+          question: text,
+          language: opts.language,
         }),
       });
       if (!ragRes.ok) throw new Error("RAG query failed");
@@ -108,21 +108,22 @@ export function useVoiceRAG(opts: UseVoiceRAGOptions) {
 
       // 3. TTS — play answer aloud
       setState("speaking");
+      const clonedVoiceId = localStorage.getItem("cd_voice_id");
       const ttsRes = await fetch("/api/voice/speak", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: answerText, language: opts.language }),
+        body: JSON.stringify({ text: answerText, language: opts.language, cloned_voice_id: clonedVoiceId }),
       });
       if (!ttsRes.ok) throw new Error("TTS failed");
 
       const audioBlob = await ttsRes.blob();
-      const audioUrl  = URL.createObjectURL(audioBlob);
-      const audio     = new Audio(audioUrl);
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
       audioRef.current = audio;
 
       await new Promise<void>((resolve, reject) => {
-        audio.onended  = () => resolve();
-        audio.onerror  = () => reject(new Error("Audio playback failed"));
+        audio.onended = () => resolve();
+        audio.onerror = () => reject(new Error("Audio playback failed"));
         audio.play().catch(reject);
       });
 
@@ -148,12 +149,12 @@ export function useVoiceRAG(opts: UseVoiceRAGOptions) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          session_id:    opts.sessionId,
-          slide_id:      opts.slideId,
-          slide_title:   opts.slideTitle,
+          session_id: opts.sessionId,
+          slide_id: opts.slideId,
+          slide_title: opts.slideTitle,
           slide_context: opts.slideContext,
           question,
-          language:      opts.language,
+          language: opts.language,
         }),
       });
       const { answer: answerText, sources: srcs } = await ragRes.json();
@@ -163,13 +164,14 @@ export function useVoiceRAG(opts: UseVoiceRAGOptions) {
 
       // TTS
       setState("speaking");
+      const clonedVoiceId = localStorage.getItem("cd_voice_id");
       const ttsRes = await fetch("/api/voice/speak", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: answerText, language: opts.language }),
+        body: JSON.stringify({ text: answerText, language: opts.language, cloned_voice_id: clonedVoiceId }),
       });
       const audioBlob = await ttsRes.blob();
-      const audio     = new Audio(URL.createObjectURL(audioBlob));
+      const audio = new Audio(URL.createObjectURL(audioBlob));
       audioRef.current = audio;
       audio.onended = () => setState("idle");
       await audio.play();
